@@ -25,7 +25,7 @@
                                 </el-col>
                                 <el-col :span="8">
 <!--                                    <el-image :src="require('../assets/phase2/'+groupId+'_'+childIdRandom[childId]+'.png')">-->
-                                    <el-image :src="require('../assets/phase2/'+groupId+'_'+renderingSequence[indexId-1]+'.png')">
+                                    <el-image :src="require('../assets/phase2/'+groupId+'_'+renderingSequence[indexId]+'.png')">
                                     </el-image>
                                 </el-col>
                             </el-row>
@@ -82,8 +82,8 @@
             </el-col>
             <el-col :span="6" :push="10" style="margin-top: 30px">
                 <el-button type="info" round  v-if="flag" :disabled=true>您已完成提交，感谢您的参与！</el-button>
-                <el-button type="info" round  v-if="indexId<(group*children)&&!flag" :disabled=true>完成所有评分即可点击提交</el-button>
-                <el-button type="primary" round  v-if="indexId===(group*children)&&!flag" @click.once="submitForm(form)">您已完成所有评分，请点击提交</el-button>
+                <el-button type="info" round  v-if="indexId<(group*children-1)&&!flag" :disabled=true>完成所有评分即可点击提交</el-button>
+                <el-button type="primary" round  v-if="indexId===(group*children-1)&&!flag" @click.once="submitForm(form)">您已完成所有评分，请点击提交</el-button>
             </el-col>
           </el-row>
         </el-col>
@@ -110,7 +110,8 @@
                 groupId: 1,
                 maxGroupId: 0,
                 childId: 0,
-                indexId: 1,
+                indexId: 0,
+                lastIndexId: -1,
                 value1: 8,
                 value2: 8,
                 value3: 8,
@@ -144,81 +145,81 @@
 
         methods: {
             change(msg) {
-                if (msg === "right"){
-                    // 保存上一步的值
-                    this.contentIntegrity[this.indexId-1]=this.value1;
-                    this.stylizationLevel[this.indexId-1]=this.value2;
-                    this.overallQuality[this.indexId-1]=this.value3;
-                    // //有分数为0时提示
-                    // if (this.value1 === 0)
-                    //     alert("内容完整性分数为0！");
+                if (msg[0] === "right"){
+                    this.indexId = msg[1];
+                    if(this.indexId !== this.lastIndexId) {
+                        this.lastIndexId = this.indexId;
+                        // 保存上一步的值
+                        this.contentIntegrity[this.indexId-1]=this.value1;
+                        this.stylizationLevel[this.indexId-1]=this.value2;
+                        this.overallQuality[this.indexId-1]=this.value3;
+                        // //有分数为0时提示
+                        // if (this.value1 === 0)
+                        //     alert("内容完整性分数为0！");
 
-                    // 控制进度条
-                    this.percentage += 1/(this.group*this.children)*100;
-                    this.percentage = parseFloat(this.percentage.toFixed(2));
-                    if (this.percentage > 100) {
-                        this.percentage = 100;
-                    }
-
-                    this.indexId +=1;
-                    this.childId +=1;
-                    if (this.indexId/this.children>this.groupId){
-                        if (this.groupId>this.maxGroupId){
-                            this.generateRandom(this.children);
-                            this.maxGroupId = this.groupId;
+                        // 控制进度条
+                        // this.percentage += Math.round(1/(this.group*this.children)*100);
+                        this.percentage += 1/(this.group*this.children)*100;
+                        this.percentage = parseFloat(this.percentage.toFixed(2));
+                        if (this.percentage > 100) {
+                            this.percentage = 100;
                         }
-                        this.groupId += 1;
-                        this.childId=0;
-                    }
-                    //回显分数或者初始化分数条为0
-                    if (this.indexId<=this.contentIntegrity.length)
-                        this.value1=this.contentIntegrity[this.indexId-1];
-                    else
-                        this.value1=8;
-                    if (this.indexId<=this.stylizationLevel.length)
-                        this.value2=this.stylizationLevel[this.indexId-1];
-                    else
-                        this.value2=8;
-                    if (this.indexId<=this.overallQuality.length)
-                        this.value3=this.overallQuality[this.indexId-1];
-                    else
-                        this.value3=8;
 
+                        if (Math.floor(this.indexId/this.children)>this.groupId-1){
+                            if (this.groupId>this.maxGroupId){
+                                this.generateRandom(this.children);
+                                this.maxGroupId = this.groupId;
+                            }
+                            this.groupId += 1;
+                            // this.childId=0;
+                        }
+                        //回显分数或者初始化分数条为8
+                        if (this.indexId<this.contentIntegrity.length)
+                            this.value1=this.contentIntegrity[this.indexId];
+                        else
+                            this.value1=8;
+                        if (this.indexId<this.stylizationLevel.length)
+                            this.value2=this.stylizationLevel[this.indexId];
+                        else
+                            this.value2=8;
+                        if (this.indexId<this.overallQuality.length)
+                            this.value3=this.overallQuality[this.indexId];
+                        else
+                            this.value3=8;
+                    }
                 }
-                if (msg === "left"){
-                    // 保存上一步的值
-                    this.contentIntegrity[this.indexId-1]=this.value1;
-                    this.stylizationLevel[this.indexId-1]=this.value2;
-                    this.overallQuality[this.indexId-1]=this.value3;
+                if (msg[0] === "left"){
+                    this.indexId = msg[1];
+                    if(this.indexId !== this.lastIndexId) {
+                        this.lastIndexId = this.indexId;
+                        // 保存上一步的值
+                        this.contentIntegrity[this.indexId+1]=this.value1;
+                        this.stylizationLevel[this.indexId+1]=this.value2;
+                        this.overallQuality[this.indexId+1]=this.value3;
 
-                    // 控制进度条
-                    this.percentage -= 1/(this.group*this.children)*100;
-                    this.percentage = parseFloat(this.percentage.toFixed(2));
-                    if (this.percentage < 0) {
-                      this.percentage = 0;
+                        // 控制进度条
+                        this.percentage -= 1/(this.group*this.children)*100;
+                        this.percentage = parseFloat(this.percentage.toFixed(2));
+                        if (this.percentage < 0) {
+                            this.percentage = 0;
+                        }
+
+                        this.groupId = Math.floor(this.indexId/this.children) + 1;
+
+                        //回显分数
+                        this.value1=this.contentIntegrity[this.indexId];
+                        this.value2=this.stylizationLevel[this.indexId];
+                        this.value3=this.overallQuality[this.indexId];
                     }
-
-                    this.indexId -=1;
-                    this.childId -=1;
-                    if (this.indexId/this.children===this.groupId-1){
-                        // this.generateRandom(this.children);
-                        this.groupId -= 1;
-                        this.childId=this.children-1;
-                    }
-
-                    //回显分数
-                    this.value1=this.contentIntegrity[this.indexId-1];
-                    this.value2=this.stylizationLevel[this.indexId-1];
-                    this.value3=this.overallQuality[this.indexId-1];
                 }
             },
             generateRandom(count) {
                 this.childIdRandom.sort(function(){ return 0.5 - Math.random(); });
                 let sequenceIndex = this.renderingSequence.length;
-                console.log(this.childIdRandom);
+                // console.log(this.childIdRandom);
                 for (let i=0; i<count; i++){
-                    console.log(sequenceIndex+i);
-                    console.log(this.childIdRandom[i]);
+                    // console.log(sequenceIndex+i);
+                    // console.log(this.childIdRandom[i]);
                     this.renderingSequence[sequenceIndex+i]=this.childIdRandom[i];
                 }
             },

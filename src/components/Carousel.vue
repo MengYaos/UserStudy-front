@@ -94,7 +94,7 @@ export default {
       activeIndex: -1,
       containerWidth: 0,
       timer: null,
-      hover: false
+      hover: false,
     };
   },
 
@@ -151,11 +151,13 @@ export default {
   methods: {
     increase() {
       // console.log("carousel-increase调用成功");
-      // console.log(this.activeIndex);
+      // console.log("内部的activeIndex-"+this.activeIndex);
       // console.log(this.items.length);
       // console.log(this.loop+"  "+this.hover+"  "+(this.activeIndex < this.items.length - 1));
       // console.log((this.arrow === 'always' || this.hover) && (this.loop || this.activeIndex < this.items.length - 1));
-      this.$emit("change","right");
+      // this.eventFlag = false;
+      this.$emit("change","right",this.activeIndex);
+      // this.eventFlag = true;
     },
     decrease() {
       // console.log("carousel-decrease调用成功");
@@ -163,7 +165,7 @@ export default {
       // console.log(this.items.length);
       // console.log(this.loop+"  "+this.hover);
       // console.log((this.arrow === 'always' || this.hover) && (this.loop || this.activeIndex > 0));
-      this.$emit("change","left");
+      this.$emit("change","left",this.activeIndex);
     },
     handleMouseEnter() {
       this.hover = true;
