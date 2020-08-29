@@ -12,7 +12,7 @@
             <el-col :span="18" :push="3">
                 <div class="grid-content bg-purple">
 <!--                    <el-carousel></el-carousel>-->
-                    <carousel arrow="always" :autoplay=false :loop="false" v-bind:percentage="percentage" v-on:change="change($event)">
+                    <carousel arrow="always" :autoplay=false :loop="false" v-bind:percentage="percentage" v-on:change="change(arguments,$event)">
                         <carousel-item v-for="items in 50" :key="items" >
                             <el-row type="flex" justify="space-around" style="padding: 0 5%;">
                               <el-col :span="8">
