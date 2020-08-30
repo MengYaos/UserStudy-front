@@ -38,7 +38,7 @@
         <el-col :span="18" :push="3">
           <el-row style="">
             <el-col :span="6" class="goalTexts">
-              <b style="">内容完整性</b>
+              <b style="">真实感程度</b>
             </el-col>
             <el-col :span="16">
               <el-slider
@@ -227,9 +227,9 @@
                 const _this=this;
                 //保存最后一步未保存的分数
                 if (_this.contentIntegrity.length<this.group*this.children){
-                    this.contentIntegrity[this.indexId-1]=this.value1;
-                    this.stylizationLevel[this.indexId-1]=this.value2;
-                    this.overallQuality[this.indexId-1]=this.value3;
+                    this.contentIntegrity[this.indexId]=this.value1;
+                    this.stylizationLevel[this.indexId]=this.value2;
+                    this.overallQuality[this.indexId]=this.value3;
                 }
 
                 form.renderingSequence=this.renderingSequence.join();

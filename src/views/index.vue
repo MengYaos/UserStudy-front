@@ -223,9 +223,9 @@
                 const _this=this;
                 //保存最后一步未保存的分数
                 if (_this.contentIntegrity.length<this.group*this.children){
-                    this.contentIntegrity[this.indexId-1]=this.value1;
-                    this.stylizationLevel[this.indexId-1]=this.value2;
-                    this.overallQuality[this.indexId-1]=this.value3;
+                    this.contentIntegrity[this.indexId]=this.value1;
+                    this.stylizationLevel[this.indexId]=this.value2;
+                    this.overallQuality[this.indexId]=this.value3;
                 }
 
                 form.renderingSequence=this.renderingSequence.join();
